@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { open, message } from "@tauri-apps/plugin-dialog";
+import { open as shellOpen } from "@tauri-apps/plugin-shell";
 import "./App.css";
+import GithubLogo from "./assets/github-mark-white.svg";
 
 function App() {
   const [sourceFolder, setSourceFolder] = useState("");
@@ -12,6 +14,7 @@ function App() {
   const [removeOriginal, setRemoveOriginal] = useState(false);
   const [convertToJPEG, setConvertToJPEG] = useState(true);
   const [processing, setProcessing] = useState(false);
+  const [hasProcessed, setHasProcessed] = useState(false);
 
   function canStart() {
     return (
@@ -55,6 +58,7 @@ function App() {
    */
   async function start() {
     setProcessing(true);
+    setHasProcessed(true);
     invoke("backup_and_convert", {
       sourcePath: sourceFolder,
       destinationPath: destinationFolder,
@@ -99,6 +103,10 @@ function App() {
     return true;
   }
 
+  function openAboutAuthor() {
+    shellOpen("https://github.com/aldnav");
+  }
+
   return (
     <main className="mx-auto">
       <div className="flex flex-col items-stretch min-h-screen">
@@ -106,6 +114,11 @@ function App() {
           <div>RDR</div>
           <div className="text-red-500">II</div>
           <div className="pl-1">Photo Backup</div>
+        </div>
+        <div className="absolute top-0 right-0 p-2">
+          <button onClick={openAboutAuthor} className="hover:animate-pulse">
+            <img src={GithubLogo} alt="aldnav's Github" className="w-4 h-4" />
+          </button>
         </div>
         <div className="min-h-32 grow bg-black grid grid-cols-2 grid-rows-1 gap-4 place-items-center">
           <div
@@ -187,7 +200,7 @@ function App() {
           <div
             className={`pr-16 ${
               canStart() ? "text-gray-200" : "text-gray-800"
-            }`}
+            } ${canStart() && !hasProcessed ? "animate-pulse" : ""}`}
           >
             <button
               className={`text-xl ${
