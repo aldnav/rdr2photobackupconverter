@@ -23,4 +23,4 @@ tauri-plugin-shell = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tauri-plugin-dialog = "2"
-rdr2photobackup = { path = "../../rdr2photobackup" }
+rdr2photobackup = { git = "https://github.com/aldnav/rdr2photobackup.git" }
