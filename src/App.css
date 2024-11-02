@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #f6f6f6;
+    background-color: #000000;
+  }
+}
+
+html {
+  @apply h-full;
+}
+body {
+  @apply h-full;
+}
+
+@layer base {
+  @font-face {
+    font-family: "Chinese Rocks";
+    font-style: normal;
+    font-weight: 400;
+    src: url("./assets/chinese_rocks_rg.otf") format("truetype");
+  }
+}
