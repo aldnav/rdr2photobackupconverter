@@ -4,6 +4,7 @@ import { open, message, ask } from "@tauri-apps/plugin-dialog";
 import { open as shellOpen } from "@tauri-apps/plugin-shell";
 import "./App.css";
 import BMCLogo from "./assets/bmc-logo.svg";
+import { version } from "../package.json";
 
 function App() {
   const [sourceFolder, setSourceFolder] = useState("");
@@ -235,6 +236,9 @@ function App() {
             </button>
           </div>
         </div>
+        <footer className="text-[10px] absolute bottom-0 right-0 p-2 text-gray-600">
+          <p>version: {version}</p>
+        </footer>
       </div>
     </main>
   );
