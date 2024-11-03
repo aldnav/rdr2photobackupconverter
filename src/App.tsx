@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { open, message } from "@tauri-apps/plugin-dialog";
+import { open, message, ask } from "@tauri-apps/plugin-dialog";
 import { open as shellOpen } from "@tauri-apps/plugin-shell";
 import "./App.css";
-import GithubLogo from "./assets/github-mark-white.svg";
+import BMCLogo from "./assets/bmc-logo.svg";
 
 function App() {
   const [sourceFolder, setSourceFolder] = useState("");
@@ -15,6 +15,18 @@ function App() {
   const [convertToJPEG, setConvertToJPEG] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [hasProcessed, setHasProcessed] = useState(false);
+
+  useEffect(() => {
+    invoke("detect_profile_dir").catch(async (_error) => {
+      console.log("Cannot detect profile directory");
+    }).then((result) => {
+      if (!result) {
+        return;
+      }
+      setSourceFolder(result as string);
+      setSourceFolderSelected(true);
+    });
+  });
 
   function canStart() {
     return (
@@ -66,10 +78,18 @@ function App() {
       convert: convertToJPEG,
     })
       .then(async (resultMessage) => {
-        await message(resultMessage as string, {
+        // await message(resultMessage as string, {
+        //   title: "RDR2PBC",
+        //   kind: "info",
+        // });
+        let message = `${resultMessage as string}\n\nDo you want to open the destination folder?`;
+        let openFolder = await ask(message, {
           title: "RDR2PBC",
           kind: "info",
         });
+        if (openFolder) {
+          shellOpen(destinationFolder);
+        }
       })
       .catch(async (err) => {
         await message(`Backup and conversion failed.\n${err as string}`, {
@@ -104,7 +124,7 @@ function App() {
   }
 
   function openAboutAuthor() {
-    shellOpen("https://github.com/aldnav");
+    shellOpen("https://buymeacoffee.com/wk5vozu");
   }
 
   return (
@@ -116,8 +136,8 @@ function App() {
           <div className="pl-1">Photo Backup</div>
         </div>
         <div className="absolute top-0 right-0 p-2">
-          <button onClick={openAboutAuthor} className="hover:animate-pulse">
-            <img src={GithubLogo} alt="aldnav's Github" className="w-4 h-4" />
+          <button onClick={openAboutAuthor} className="hover:animate-pulse rounded-full bg-yellow-200 w-6 h-6" title="Buy me a coffee">
+            <img src={BMCLogo} alt="aldnav's Github" className="w-4 h-4 pl-2" />
           </button>
         </div>
         <div className="min-h-32 grow bg-black grid grid-cols-2 grid-rows-1 gap-4 place-items-center">

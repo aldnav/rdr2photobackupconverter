@@ -24,3 +24,5 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tauri-plugin-dialog = "2"
 rdr2photobackup = { git = "https://github.com/aldnav/rdr2photobackup.git" }
+resolve-path = "0.1.0"
+walkdir = "2.5.0"
